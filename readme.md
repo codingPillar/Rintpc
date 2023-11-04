@@ -18,8 +18,8 @@
 ## Building and User Guide
 ### Each subprojects contains readmes that explain how to build and use each section seperatly and an example folder
 
-## COntribution
+## Contribution
 ### Contributions can be made directly as pull requests
 
-## Liscence
+## License
 ### Open Source (ENJOY !!)
