@@ -1,7 +1,7 @@
 #ifndef RINTPC_TOPIC_SERVER
 #define RINTPC_TOPIC_SERVER
 
-#include "network.h"
+#include "networkServer.h"
 #include "topicHandler.h"
 
 namespace rintpc {

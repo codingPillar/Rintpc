@@ -4,4 +4,12 @@
 /* TO INDICATE THAT A CERTAIN FUNCTION IS BLOCKING */
 #define RINTPC_BLOCKING
 
+namespace rintpc {
+
+constexpr unsigned int BACKLOG_SIZE = 256;
+
+constexpr unsigned int SOCK_RCV_BUFF_MAX_SIZE = 1024;
+
+}
+
 #endif //RINTPC_COMMON_CONSTANTS_H

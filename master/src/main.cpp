@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "mconstants.h"
-#include "network.h"
+#include "networkServer.h"
 #include "topicServer.h"
 #include "topic.h"
 

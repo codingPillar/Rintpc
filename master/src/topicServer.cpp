@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "network.h"
+#include "networkServer.h"
 #include "topicHandler.h"
 #include "topicServer.h"
 

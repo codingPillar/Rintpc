@@ -7,7 +7,7 @@
 #include <mutex>
 
 #include "topic.h"
-#include "network.h"
+#include "networkServer.h"
 
 namespace rintpc {
 

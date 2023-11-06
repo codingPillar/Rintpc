@@ -6,7 +6,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
-#include "../include/network.h"
+#include "networkServer.h"
 
 using namespace std;
 
