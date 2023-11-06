@@ -1,0 +1,24 @@
+#ifndef RINTPC_COMMON_CLIENT_H
+#define RINTPC_COMMON_CLIENT_H
+
+#include "network.h"
+
+namespace rintpc {
+
+class Client{
+public:
+    Client(const struct NodeAddress &nodeAddress);
+
+    bool openConnection();
+
+private:
+    /* METHODS */
+
+    /* ATTRIBS */    
+    struct NodeAddress server;
+    int fd = -1;
+};
+
+}
+
+#endif //RINTPC_COMMON_CLIENT_H
