@@ -7,12 +7,6 @@
 
 namespace rintpc {
 
-/* VALUES ARE IN NETWORK FORMAT */
-struct NodeAddress{
-    uint32_t ip;
-    uint16_t port;
-};
-
 class Server;
 
 class Connection{
