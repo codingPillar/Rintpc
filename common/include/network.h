@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-#include "../include/constants.h"
+#include "constants.h"
 
 namespace rintpc {
 

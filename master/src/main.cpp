@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "constants.h"
+#include "mconstants.h"
 #include "network.h"
 #include "topicServer.h"
 #include "topic.h"
@@ -35,7 +35,6 @@ public:
 int main(int argc, char **argv){
     cout << "HOLLA RINTPC" << endl;
 
-    //SimpleServer server(MASTER_IP, MASTER_PORT);
     TopicServer server(MASTER_IP, MASTER_PORT);
 
     server.listen();

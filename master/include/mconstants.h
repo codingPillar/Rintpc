@@ -3,9 +3,6 @@
 
 #include <cstdint>
 
-/* TO INDICATE THAT A CERTAIN FUNCTION IS BLOCKING */
-#define RINTPC_BLOCKING
-
 namespace rintpc {
 
 constexpr uint16_t MASTER_PORT = 50101;
