@@ -15,6 +15,7 @@ public:
 private:
 };
 
+/* EXPECTS HOST FORMAT IP AND PORT */
 class TopicServer: public Server{
 public:
     TopicServer(uint32_t ip, uint16_t port);
