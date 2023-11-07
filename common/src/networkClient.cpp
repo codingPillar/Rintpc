@@ -3,6 +3,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
+#include "poll.h"
 
 #include "constants.h"
 #include "network.h"
@@ -44,6 +45,14 @@ bool Client::openConnection(){
     }
     cout << "NEW CONNECTION WITH : " << formatIP(destination.sin_addr.s_addr) << ":" << ntohs(destination.sin_port) << " FROM : " << formatIP(local.sin_addr.s_addr) << ":" << ntohs(local.sin_port) << endl;
     return true;
+}
+
+bool Client::dataAvailable(){
+    struct pollfd pollfd = {.fd = this->fd, .events = POLLIN};
+    /* NON-BLOCKING AND ONLY ONE FILE DESCRIPTOR */
+    int result = poll(&pollfd, 1, 0);
+    if(result < 0) return false;
+    return (pollfd.revents & POLLIN) != 0;
 }
 
 bool Client::closeConnection(){

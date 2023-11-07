@@ -10,6 +10,7 @@ public:
     Client(const struct NodeAddress &nodeAddress);
 
     bool closeConnection();
+    bool dataAvailable();
     int send(const char *buffer, unsigned int size);
 
 private:
