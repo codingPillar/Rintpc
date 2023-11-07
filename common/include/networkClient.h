@@ -9,10 +9,12 @@ class Client{
 public:
     Client(const struct NodeAddress &nodeAddress);
 
-    bool openConnection();
+    bool closeConnection();
+    int send(const char *buffer, unsigned int size);
 
 private:
     /* METHODS */
+    bool openConnection();
 
     /* ATTRIBS */    
     struct NodeAddress server;

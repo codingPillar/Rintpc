@@ -2,10 +2,16 @@ SRC_DIR:=src
 INCLUDE_DIR:=include
 OUT_DIR:=out
 TEST_DIR:=test
+COMMON_DIR:=../common
+
+COMMON_SRC:=$(wildcard $(COMMON_DIR)/$(SRC_DIR)/*.cpp)
+COMMON_SRC_OBJ:=$(COMMON_SRC:$(COMMON_DIR)/$(SRC_DIR)/%=$(COMMON_DIR)/$(OUT_DIR)/%.o)
 
 SRC_FILES:=$(wildcard $(SRC_DIR)/*.cpp)
 SRC_OBJ:=$(SRC_FILES:$(SRC_DIR)/%=$(OUT_DIR)/%.o)
+SRC_OBJ+=$(COMMON_SRC_OBJ)
 SRC_OBJ_CMP:=$(SRC_FILES:$(SRC_DIR)/%=$(OUT_DIR)/%.cmp.o)
+
 TEST_SRC:=$(wildcard $(TEST_DIR)/*.cpp)
 TEST_OBJ:=$(TEST_SRC:$(TEST_DIR)/%=$(OUT_DIR)/%.test.o)
 TEST_OBJ+=$(SRC_OBJ)
@@ -36,6 +42,7 @@ $(OUT_DIR)/%.test.o:$(TEST_DIR)/%
 	$(COMPILE)
 
 build: $(SRC_OBJ)
+	echo $(COMMON_SRC_OBJ)
 	$(CXX) $(CXX_FLAGS) $^ -o $(OUT_DIR)/$(OUT_NAME) $(CXX_LIB_PATH) $(CXX_LIBS)
 
 test: $(TEST_OBJ)
