@@ -24,6 +24,7 @@ void TopicConnection::onReceive(char *buffer, unsigned int length, void *data){
 /* CLASS TopicServer */
 TopicServer::TopicServer(uint32_t ip, uint16_t port): Server(ip, port) {
     this->topicHandler = TopicHandler::getTopicHandler();
+    this->data = this->topicHandler;
 };
 
 Connection* TopicServer::getConnection(int connectionFd) {
