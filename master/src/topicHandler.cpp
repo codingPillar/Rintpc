@@ -1,5 +1,6 @@
 #include <iostream>
 #include <assert.h>
+#include <vector>
 
 #include "topicHandler.h"
 
@@ -47,8 +48,8 @@ pair<TopicMessage, vector<NodeAddress>> TopicHandler::popTopicMessage(const std:
         this->unlockBoth();
         return {{}, vector<NodeAddress>()};
     }
-    TopicMessage message = messages->second[messages->second.size() - 1]; 
-    messages->second.pop_back(); 
+    TopicMessage message = messages->second.front();
+    messages->second.pop_front();
     this->unlockBoth();
     return {message, listeners->second};
 }
