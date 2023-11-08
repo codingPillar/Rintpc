@@ -12,7 +12,7 @@ class SimpleConnection: public Connection {
 public:
     SimpleConnection(Server *server, int connectionFd) : Connection(server, connectionFd) {}
 
-    virtual void onReceive(char *buffer, unsigned int length){
+    virtual void onReceive(char *buffer, unsigned int length, void *data = nullptr){
         cout << buffer << endl;
         this->send(buffer, length);
     }

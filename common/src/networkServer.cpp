@@ -47,14 +47,14 @@ void RINTPC_BLOCKING Server::listen(){
         if(connectionFd < 0) continue;
         cout << "RECEIVED CONNECTION FROM: " << client.sin_addr.s_addr << " PORT: " << ntohs(client.sin_port) << endl;
         Connection *conn = this->getConnection(connectionFd);
+        //this->connections.push_back(conn);
         /* TODO, ADD POLLING TO CHECK IF MESSAGE AVAILABLE BEFORE BLOCKING ON RECV */
         unsigned int length = recv(conn->connectionFd, buffer.data(), SOCK_RCV_BUFF_MAX_SIZE, 0);
         /* TODO, ADD CHECK FOR RCV RETURN */
         if(length > 0)
-            conn->onReceive(buffer.data(), length);
+            conn->onReceive(buffer.data(), length, data);
         close(connectionFd);
         this->cleanConnection(conn);
-        cout << "END CONNECTION" << endl;
     }
 }
 

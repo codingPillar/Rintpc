@@ -10,7 +10,7 @@ class TopicConnection: public Connection{
 public:
     TopicConnection(Server *server, int connectionFd);
 
-    virtual void onReceive(char *buffer, unsigned int length) override;
+    virtual void onReceive(char *buffer, unsigned int length, void *data = nullptr) override;
 
 private:
 };

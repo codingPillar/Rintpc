@@ -2,6 +2,7 @@
 #define RINTPC_NETWORK_H
 
 #include <cstdint>
+#include <vector>
 
 #include "constants.h"
 
@@ -14,7 +15,7 @@ public:
     Connection(Server *server, int connectionFd);
     virtual ~Connection() = default;
     
-    virtual void onReceive(char *buffer, unsigned int length) = 0;
+    virtual void onReceive(char *buffer, unsigned int length, void *data = nullptr) = 0;
     int send(char *buffer, unsigned int length);
 
 private:
@@ -40,6 +41,9 @@ protected:
     uint16_t port;
     int socketFd;
     bool running;
+    void *data = nullptr;
+
+    std::vector<Connection*> connections;
 };
 
 };
