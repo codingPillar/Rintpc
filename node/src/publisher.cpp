@@ -14,7 +14,7 @@ int main(){
     TopicPublisher &publisher = node.advertiseTopic("MAP");
     (void) publisher;
 
-    Clock clock(1); /* 10 Hz CLOCK */
+    Clock clock(1); /* 1 Hz CLOCK */
     while(!node.shouldStop()){
         clock.sleep();
         cout << "HOLLA" << endl;

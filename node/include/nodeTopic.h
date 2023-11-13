@@ -9,8 +9,6 @@
 namespace rintpc {
 
 class Node;
-bool pushTopicMessage(const TopicMessage &message);
-
 
 class TopicPublisher{
 public:
