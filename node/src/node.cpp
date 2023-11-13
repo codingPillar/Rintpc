@@ -17,6 +17,11 @@ bool Node::pushTopicMessage(const TopicMessage &message){
     return true;
 }
 
+bool Node::shouldStop(){
+    /* TODO, SYNCHRONIZE WITH MASTER AND ADD HANDLING FOR SIGNALS */
+    return false;
+}
+
 bool Node::listenTopic(const std::string &name, TopicListenerCallback callback){
     auto previous = this->listeners.find(name);
     if(previous != this->listeners.end()) return false;
@@ -37,9 +42,11 @@ void Node::singleSpin(){
     /* WE WANT TO RECEIVE DATA IF AVAILABLE */
     
     /* WE WANT TO SEND DATA IF AVAILABLE*/
-    for(auto &message : this->messagePublishQueue)
+    while(this->messagePublishQueue.size() > 0){
+        auto &message = this->messagePublishQueue.back();
         client.send((char *) &message, sizeof(TopicMessage));
-    this->messagePublishQueue.clear();
+        this->messagePublishQueue.pop_back();
+    }
 }
 
 void Node::spin(){

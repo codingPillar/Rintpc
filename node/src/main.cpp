@@ -2,6 +2,7 @@
 #include <netinet/in.h>
 
 #include "node.h"
+#include "clock.h"
 
 using namespace std;
 using namespace rintpc;
@@ -12,8 +13,14 @@ int main(){
 
     TopicPublisher &publisher = node.advertiseTopic("MAP");
     (void) publisher;
-    //publisher.publish("HOLLA", 6);
 
-    node.spin();
+    Clock clock(1); /* 10 Hz CLOCK */
+    while(!node.shouldStop()){
+        clock.sleep();
+        cout << "HOLLA" << endl;
+        publisher.publish("HOLLA", 6);
+        node.singleSpin();
+    }
+    
     return 0;
 }

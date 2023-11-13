@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <thread>
 
 #include "constants.h"
 
@@ -17,7 +18,8 @@ public:
     
     virtual void onReceive(char *buffer, unsigned int length, void *data = nullptr) = 0;
     int send(char *buffer, unsigned int length);
-
+    bool dataAvailable();
+    
 private:
     Server *server;
     int connectionFd;
@@ -29,7 +31,7 @@ private:
 class Server{
 public:
     Server(uint32_t ip, uint16_t port);
-    ~Server() = default;
+    virtual ~Server() = default;
 
     virtual Connection* getConnection(int connectionFd) = 0;
     virtual void cleanConnection(Connection *connection) = 0;
@@ -44,6 +46,12 @@ protected:
     void *data = nullptr;
 
     std::vector<Connection*> connections;
+
+private:
+    void startReceiveThread();
+    void cleanReceiveThread();
+
+    std::thread *thread = nullptr;
 };
 
 };

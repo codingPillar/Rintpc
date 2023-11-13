@@ -48,11 +48,7 @@ bool Client::openConnection(){
 }
 
 bool Client::dataAvailable(){
-    struct pollfd pollfd = {.fd = this->fd, .events = POLLIN};
-    /* NON-BLOCKING AND ONLY ONE FILE DESCRIPTOR */
-    int result = poll(&pollfd, 1, 0);
-    if(result < 0) return false;
-    return (pollfd.revents & POLLIN) != 0;
+    return rintpc::dataAvailable(this->fd);
 }
 
 bool Client::closeConnection(){

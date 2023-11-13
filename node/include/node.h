@@ -22,6 +22,7 @@ public:
     ~Node();
 
     bool listenTopic(const std::string &name, TopicListenerCallback callback);
+    bool shouldStop();
     TopicPublisher& advertiseTopic(const std::string &topic);
     void singleSpin();
     void spin();

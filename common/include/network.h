@@ -18,6 +18,8 @@ extern const struct NodeAddress MASTER_NODE_ADDRESS;
 
 std::string formatIP(uint32_t ip, bool networkFormat = true);
 
+bool dataAvailable(int fd);
+
 }
 
 #endif //RINTPC_COMMON_NETWORK_H

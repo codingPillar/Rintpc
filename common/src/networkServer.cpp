@@ -25,6 +25,10 @@ int Connection::send(char *buffer, unsigned int length){
     return result;
 }
 
+bool Connection::dataAvailable(){
+    return rintpc::dataAvailable(this->connectionFd);
+}
+
 /* CLASS Server */
 Server::Server(uint32_t ip, uint16_t port) : ip(ip), port(port), running(true) {
     int result = 0;
@@ -38,8 +42,8 @@ Server::Server(uint32_t ip, uint16_t port) : ip(ip), port(port), running(true) {
 }
 
 void RINTPC_BLOCKING Server::listen(){
+    this->startReceiveThread();
     ::listen(socketFd, BACKLOG_SIZE);
-    array<char, SOCK_RCV_BUFF_MAX_SIZE> buffer;
     while(this->running){
         struct sockaddr_in client;
         unsigned int sockLength = sizeof(client);
@@ -48,19 +52,35 @@ void RINTPC_BLOCKING Server::listen(){
         if(connectionFd < 0) continue;
         cout << "RECEIVED CONNECTION FROM: " << formatIP(client.sin_addr.s_addr) << " PORT: " << ntohs(client.sin_port) << endl;
         Connection *conn = this->getConnection(connectionFd);
-        //this->connections.push_back(conn);
-        /* TODO, ADD POLLING TO CHECK IF MESSAGE AVAILABLE BEFORE BLOCKING ON RECV */
-        unsigned int length = recv(conn->connectionFd, buffer.data(), SOCK_RCV_BUFF_MAX_SIZE, 0);
-        /* TODO, ADD CHECK FOR RCV RETURN */
-        if(length > 0)
-            conn->onReceive(buffer.data(), length, data);
-        close(connectionFd);
-        this->cleanConnection(conn);
+        this->connections.push_back(conn);
     }
 }
 
 void Server::stop(){
     this->running = false;
 }
+
+void Server::startReceiveThread(){
+    auto threadMain = [this](){
+        cout << "STARTED SERVER RECEIVE THREAD" << endl;
+        array<char, SOCK_RCV_BUFF_MAX_SIZE> buffer;
+        while(this->running){
+            for(auto connection : this->connections){
+                if(!connection->dataAvailable()) continue;
+                unsigned int length = recv(connection->connectionFd, buffer.data(), SOCK_RCV_BUFF_MAX_SIZE, 0);
+                if(length > 0)
+                    connection->onReceive(buffer.data(), length, data);
+            }
+        }
+    };
+    this->thread = new std::thread(threadMain);
+}
+
+void Server::cleanReceiveThread(){
+    if(!this->thread) return;
+    this->thread->join();
+    delete this->thread;
+}
+
 
 };
