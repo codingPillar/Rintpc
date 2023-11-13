@@ -8,14 +8,14 @@ COMMON_SRC:=$(wildcard $(COMMON_DIR)/$(SRC_DIR)/*.cpp)
 COMMON_SRC_OBJ:=$(COMMON_SRC:$(COMMON_DIR)/$(SRC_DIR)/%=$(COMMON_DIR)/$(OUT_DIR)/%.o)
 
 SRC_FILES:=$(wildcard $(SRC_DIR)/*.cpp)
-SRC_OBJ:=$(SRC_FILES:$(SRC_DIR)/%=$(OUT_DIR)/%.o)
+SRC_OBJ:=$(filter-out $(SRC_DIR)/listener.cpp $(SRC_DIR)/publisher.cpp,$(SRC_FILES))
+SRC_OBJ:=$(SRC_OBJ:$(SRC_DIR)/%=$(OUT_DIR)/%.o)
 SRC_OBJ+=$(COMMON_SRC_OBJ)
 SRC_OBJ_CMP:=$(SRC_FILES:$(SRC_DIR)/%=$(OUT_DIR)/%.cmp.o)
 
 TEST_SRC:=$(wildcard $(TEST_DIR)/*.cpp)
 TEST_OBJ:=$(TEST_SRC:$(TEST_DIR)/%=$(OUT_DIR)/%.test.o)
 TEST_OBJ+=$(SRC_OBJ)
-TEST_OBJ:=$(filter-out %/main.cpp.o,$(TEST_OBJ)) 
 
 CURRENT_DIR:=$(shell pwd)
 
@@ -26,7 +26,8 @@ CXX_INC:=-I../common/include -I./include
 CXX_LIB_PATH:=
 CXX_LIBS:=
 
-OUT_NAME:=node
+LISTENER_OUT_NAME:=listener
+PUBLISHER_OUT_NAME:=publisher
 OUT_TESTS:=tests
 
 CMP_DATABASE_BUILDER:=comp_database_gen
@@ -41,9 +42,10 @@ $(OUT_DIR)/%.o:$(SRC_DIR)/%
 $(OUT_DIR)/%.test.o:$(TEST_DIR)/%
 	$(COMPILE)
 
-build: $(SRC_OBJ)
-	echo $(COMMON_SRC_OBJ)
-	$(CXX) $(CXX_FLAGS) $^ -o $(OUT_DIR)/$(OUT_NAME) $(CXX_LIB_PATH) $(CXX_LIBS)
+build: $(SRC_OBJ) $(OUT_DIR)/listener.cpp.o $(OUT_DIR)/publisher.cpp.o
+	echo $(SRC_OBJ)
+	$(CXX) $(CXX_FLAGS) $(SRC_OBJ) $(OUT_DIR)/listener.cpp.o -o $(OUT_DIR)/$(LISTENER_OUT_NAME) $(CXX_LIB_PATH) $(CXX_LIBS)
+	$(CXX) $(CXX_FLAGS) $(SRC_OBJ) $(OUT_DIR)/publisher.cpp.o -o $(OUT_DIR)/$(PUBLISHER_OUT_NAME) $(CXX_LIB_PATH) $(CXX_LIBS)
 
 test: $(TEST_OBJ)
 	$(CXX) $(CXX_FLAGS) $^ -o $(OUT_DIR)/$(OUT_TESTS) $(CXX_LIB_PATH) $(CXX_LIBS) -lgtest

@@ -16,7 +16,7 @@ namespace rintpc {
 class Server;
 
 /* CLASS Connection */
-Connection::Connection(Server *server, int connectionFd) : server(server), connectionFd(connectionFd) {}
+Connection::Connection(Server *server, NodeAddress remote, int connectionFd) : remote(remote), server(server),  connectionFd(connectionFd) {}
 
 int Connection::send(char *buffer, unsigned int length){
     long int result = ::send(this->connectionFd, buffer, length, 0);
@@ -30,7 +30,7 @@ bool Connection::dataAvailable(){
 }
 
 /* CLASS Server */
-Server::Server(uint32_t ip, uint16_t port) : ip(ip), port(port), running(true) {
+Server::Server(uint32_t ip, uint16_t port) : address{ip, port}, running(true) {
     int result = 0;
     this->socketFd = socket(AF_INET, SOCK_STREAM, 0);
     sockaddr_in sockAddr = {.sin_family = AF_INET, .sin_port = htons(port),
@@ -51,7 +51,7 @@ void RINTPC_BLOCKING Server::listen(){
         /* VERIFY THAT WE WERE ABLE TO ACCEPT CONNECTION */
         if(connectionFd < 0) continue;
         cout << "RECEIVED CONNECTION FROM: " << formatIP(client.sin_addr.s_addr) << " PORT: " << ntohs(client.sin_port) << endl;
-        Connection *conn = this->getConnection(connectionFd);
+        Connection *conn = this->getConnection({ntohl(client.sin_addr.s_addr), ntohs(client.sin_port)}, connectionFd);
         this->connections.push_back(conn);
     }
 }

@@ -6,6 +6,7 @@
 #include <thread>
 
 #include "constants.h"
+#include "network.h"
 
 namespace rintpc {
 
@@ -13,12 +14,15 @@ class Server;
 
 class Connection{
 public:
-    Connection(Server *server, int connectionFd);
+    Connection(Server *server, NodeAddress remote, int connectionFd);
     virtual ~Connection() = default;
     
     virtual void onReceive(char *buffer, unsigned int length, void *data = nullptr) = 0;
     int send(char *buffer, unsigned int length);
     bool dataAvailable();
+
+protected:    
+    NodeAddress remote;
     
 private:
     Server *server;
@@ -33,14 +37,13 @@ public:
     Server(uint32_t ip, uint16_t port);
     virtual ~Server() = default;
 
-    virtual Connection* getConnection(int connectionFd) = 0;
+    virtual Connection* getConnection(NodeAddress remote, int connectionFd) = 0;
     virtual void cleanConnection(Connection *connection) = 0;
     void RINTPC_BLOCKING listen();
     void stop();
 
 protected:
-    uint32_t ip;
-    uint16_t port;
+    NodeAddress address;
     int socketFd;
     bool running;
     void *data = nullptr;
