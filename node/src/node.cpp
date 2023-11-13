@@ -1,5 +1,7 @@
 #include "node.h"
 #include "networkClient.h"
+#include "topic.h"
+#include <cstring>
 
 using namespace rintpc;
 
@@ -23,8 +25,11 @@ bool Node::listenTopic(const std::string &name, TopicListenerCallback callback){
 }
 
 TopicPublisher& Node::advertiseTopic(const std::string &topic){
+    struct TopicMessage advertiseMessage;
+    strncpy(advertiseMessage.name, topic.c_str(), TOPIC_NAME_SIZE);
+    advertiseMessage.type = REGISTER_TOPIC_T;
     this->publishers.push_back(TopicPublisher(topic, *this));
-    /* TODO, INFORM MASTER THAT WE HAVE A NEW NODE */
+    this->pushTopicMessage(advertiseMessage);
     return this->publishers[this->publishers.size() - 1];
 }
 

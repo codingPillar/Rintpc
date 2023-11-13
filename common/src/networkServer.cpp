@@ -6,6 +6,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
+#include "network.h"
 #include "networkServer.h"
 
 using namespace std;
@@ -45,7 +46,7 @@ void RINTPC_BLOCKING Server::listen(){
         int connectionFd = accept(this->socketFd, (struct sockaddr*)&client, &sockLength);
         /* VERIFY THAT WE WERE ABLE TO ACCEPT CONNECTION */
         if(connectionFd < 0) continue;
-        cout << "RECEIVED CONNECTION FROM: " << client.sin_addr.s_addr << " PORT: " << ntohs(client.sin_port) << endl;
+        cout << "RECEIVED CONNECTION FROM: " << formatIP(client.sin_addr.s_addr) << " PORT: " << ntohs(client.sin_port) << endl;
         Connection *conn = this->getConnection(connectionFd);
         //this->connections.push_back(conn);
         /* TODO, ADD POLLING TO CHECK IF MESSAGE AVAILABLE BEFORE BLOCKING ON RECV */

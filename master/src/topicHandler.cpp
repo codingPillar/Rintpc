@@ -14,11 +14,26 @@ TopicHandler* TopicHandler::getTopicHandler(){
     return &TopicHandler::instance;
 }
 
+bool TopicHandler::registerTopic(const std::string &name){
+    this->lockBoth();
+    auto elem = this->messageQueue.find(name);
+    if(elem != this->messageQueue.end()){
+        cout << "TOPIC: " << name << " ALREADY REGISTERED USER OTHER NAME" << endl;
+        this->unlockBoth();
+        return false;
+    }
+    this->messageQueue.insert({name, std::list<TopicMessage>()});
+    this->topicListeners.insert({name, std::vector<NodeAddress>()});
+    cout << "NEW TOPIC: " << name << " REGISTERED" << endl;
+    this->unlockBoth();
+    return false;
+}
+
 bool TopicHandler::pushTopicMessage(const struct TopicMessage *topicMessage){
     this->messageMut.lock();
     auto topicMessages = this->messageQueue.find(topicMessage->name);
     if(topicMessages == this->messageQueue.end()){
-        cout << "COULD NOT FIND TOPIC WITH NAME: " << topicMessage->name << "RESGITER NODE FIRST" << endl;
+        cout << "COULD NOT FIND TOPIC WITH NAME: " << topicMessage->name << " RESGITER NODE FIRST" << endl;
         this->messageMut.unlock();
         return false;
     }

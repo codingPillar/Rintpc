@@ -10,7 +10,7 @@ namespace rintpc {
 
 constexpr unsigned int BACKLOG_SIZE = 256;
 
-constexpr unsigned int SOCK_RCV_BUFF_MAX_SIZE = 1024;
+constexpr unsigned int SOCK_RCV_BUFF_MAX_SIZE = 2048;
 
 constexpr unsigned int LOCAL_HOST_IP = (127 << (8 * 3)) | 1;
 

@@ -11,7 +11,8 @@ int main(){
     Node node{"MAIN"};
 
     TopicPublisher &publisher = node.advertiseTopic("MAP");
-    publisher.publish("HOLLA", 6);
+    (void) publisher;
+    //publisher.publish("HOLLA", 6);
 
     node.spin();
     return 0;

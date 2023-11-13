@@ -26,7 +26,7 @@ CXX_INC:=-I../common/include -I./include
 CXX_LIB_PATH:=
 CXX_LIBS:=
 
-OUT_NAME:=master
+OUT_NAME:=rintpc
 OUT_TESTS:=tests
 
 CMP_DATABASE_BUILDER:=comp_database_gen

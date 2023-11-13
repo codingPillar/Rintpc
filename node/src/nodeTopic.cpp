@@ -15,6 +15,7 @@ bool TopicPublisher::publish(const char *message, unsigned int length){
     struct TopicMessage topicMessage = {.length = (uint16_t)length};
     strcpy(topicMessage.name, this->name.c_str());
     memcpy(topicMessage.message, message, length);
+    topicMessage.type = PUBLISH_MESSAGE_T;
     return this->node.pushTopicMessage(topicMessage);
 }
 

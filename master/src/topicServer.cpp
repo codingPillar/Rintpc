@@ -11,14 +11,22 @@ using namespace std;
 TopicConnection::TopicConnection(Server *server, int connectionFd): Connection(server, connectionFd) {}
 
 void TopicConnection::onReceive(char *buffer, unsigned int length, void *data){
-    cout << "TOPIC RECEIVED" << endl;
+    cout << "TOPIC MESSAGE RECEIVED WITH SIZE: " << length << endl;
     auto topicMessage = (TopicMessage*) buffer;
     auto topicHandler = (TopicHandler*) data; 
-    /* TODO, SHOULD HAVE A DIFFERENT PROTOCOL FOR FIRST REGISTRATION OF TOPIC */
-    topicHandler->pushTopicMessage(topicMessage);
-    cout << "NAME: " << topicMessage->name << endl;
-    cout << "LENGTH: " << topicMessage->length << endl;
-    cout << "MESSAGE: " << topicMessage->message << endl;
+    switch (topicMessage->type) {
+        case REGISTER_TOPIC_T:
+            cout << "REGISTERING TOPIC: " << topicMessage->name << endl;
+            topicHandler->registerTopic(topicMessage->name);
+            break;
+        case PUBLISH_MESSAGE_T:
+            cout << "PUBLISHING MESSAGE ON TOPIC: " << topicMessage->name << endl;
+            topicHandler->pushTopicMessage(topicMessage);
+            break;
+        default:
+            cout << "TOPIC OPTION: " << topicMessage->type << " COULD NOT BE PARSED" << endl;
+            break;
+    };
 }
 
 /* CLASS TopicServer */
