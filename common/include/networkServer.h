@@ -18,8 +18,9 @@ public:
     virtual ~Connection() = default;
     
     virtual void onReceive(char *buffer, unsigned int length, void *data = nullptr) = 0;
-    int send(char *buffer, unsigned int length);
+    int send(const char *buffer, unsigned int length);
     bool dataAvailable();
+    NodeAddress getRemoteAddress();
 
 protected:    
     NodeAddress remote;

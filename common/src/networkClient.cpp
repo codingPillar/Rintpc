@@ -61,3 +61,11 @@ int Client::send(const char *buffer, unsigned int size){
     return result;
 }
 
+int Client::receive(){
+    return recv(this->fd, this->buffer.data(), SOCK_RCV_BUFF_MAX_SIZE, 0);
+}
+
+const char* Client::getBuffer(){
+    return this->buffer.data();
+}
+

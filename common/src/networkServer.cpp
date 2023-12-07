@@ -8,6 +8,7 @@
 
 #include "network.h"
 #include "networkServer.h"
+#include "clock.h"
 
 using namespace std;
 
@@ -18,7 +19,7 @@ class Server;
 /* CLASS Connection */
 Connection::Connection(Server *server, NodeAddress remote, int connectionFd) : remote(remote), server(server),  connectionFd(connectionFd) {}
 
-int Connection::send(char *buffer, unsigned int length){
+int Connection::send(const char *buffer, unsigned int length){
     long int result = ::send(this->connectionFd, buffer, length, 0);
     if(result != length)
         cout << "COULD NOT SEND ENTIRE MESSAGE, SENT: " << result << " EXPECTED: " << length << " ON FD: " << connectionFd << endl;
@@ -28,6 +29,11 @@ int Connection::send(char *buffer, unsigned int length){
 bool Connection::dataAvailable(){
     return rintpc::dataAvailable(this->connectionFd);
 }
+
+NodeAddress Connection::getRemoteAddress(){
+    return this->remote;
+}
+
 
 /* CLASS Server */
 Server::Server(uint32_t ip, uint16_t port) : address{ip, port}, running(true) {
@@ -64,6 +70,7 @@ void Server::startReceiveThread(){
     auto threadMain = [this](){
         cout << "STARTED SERVER RECEIVE THREAD" << endl;
         array<char, SOCK_RCV_BUFF_MAX_SIZE> buffer;
+        Clock rate(5);
         while(this->running){
             for(auto connection : this->connections){
                 if(!connection->dataAvailable()) continue;
@@ -71,6 +78,7 @@ void Server::startReceiveThread(){
                 if(length > 0)
                     connection->onReceive(buffer.data(), length, data);
             }
+            rate.sleep();
         }
     };
     this->thread = new std::thread(threadMain);
@@ -81,6 +89,5 @@ void Server::cleanReceiveThread(){
     this->thread->join();
     delete this->thread;
 }
-
 
 };

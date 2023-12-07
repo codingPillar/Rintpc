@@ -1,6 +1,8 @@
 #ifndef RINTPC_TOPIC_SERVER
 #define RINTPC_TOPIC_SERVER
 
+#include <thread>
+
 #include "network.h"
 #include "networkServer.h"
 #include "topicHandler.h"
@@ -25,7 +27,11 @@ public:
     virtual void cleanConnection(Connection *connection) override;
 
 private:
+    void startNotifierThread();
+    void stopNotifierThread();
+
     TopicHandler *topicHandler;
+    std::thread *notifierThread = nullptr;
 };
 
 }

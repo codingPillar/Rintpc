@@ -17,10 +17,10 @@ enum TOPIC_MESSAGE_TYPE{
 };
 
 struct TopicMessage{
-    char name[TOPIC_NAME_SIZE];
+    char name[TOPIC_NAME_SIZE] = {0};
     enum TOPIC_MESSAGE_TYPE type; 
-    uint16_t length;
-    char message[TOPIC_MESSAGE_SIZE];
+    uint16_t length = 0;
+    char message[TOPIC_MESSAGE_SIZE] = {0};
 };/* STRUCTURE IS PACKED */
 
 };

@@ -31,6 +31,9 @@ public:
     bool pushTopicMessage(const TopicMessage &message);
 
 private:
+    /* METHODS */
+    void receiveMessage();
+
     /* ATTRIBS */
     std::string name;
     std::unordered_map<std::string, TopicListenerCallback> listeners;

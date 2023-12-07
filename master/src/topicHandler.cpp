@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <vector>
 
+#include "networkServer.h"
 #include "topicHandler.h"
 
 using namespace std;
@@ -23,7 +24,7 @@ bool TopicHandler::registerTopic(const std::string &name){
         return false;
     }
     this->messageQueue.insert({name, std::list<TopicMessage>()});
-    this->topicListeners.insert({name, std::vector<NodeAddress>()});
+    this->topicListeners.insert({name, std::vector<Connection*>()});
     cout << "NEW TOPIC: " << name << " REGISTERED" << endl;
     this->unlockBoth();
     return false;
@@ -42,11 +43,11 @@ bool TopicHandler::pushTopicMessage(const struct TopicMessage *topicMessage){
     return true;
 }
 
-void TopicHandler::addTopicListener(const string &name, const struct NodeAddress &listener){
+void TopicHandler::addTopicListener(const string &name, Connection *listener){
     this->listenersMut.lock();
     auto listeners = this->topicListeners.find(name);
     if(listeners == this->topicListeners.end()){
-        cout << "COULD NOT FIND TOPIC WITH NAME: " << name << "RESGITER NODE FIRST BEFORE ADDING LISTENER" << endl;
+        cout << "COULD NOT FIND TOPIC WITH NAME: " << name << " REGISTER NODE FIRST BEFORE ADDING LISTENER" << endl;
         this->listenersMut.unlock();
         return;
     }
@@ -54,14 +55,21 @@ void TopicHandler::addTopicListener(const string &name, const struct NodeAddress
     this->listenersMut.unlock();
 }
 
-pair<TopicMessage, vector<NodeAddress>> TopicHandler::popTopicMessage(const std::string &name){
+std::vector<std::string> TopicHandler::getTopics(){
+    std::vector<std::string> topics;
+    for(auto topic : this->messageQueue)
+        topics.push_back(topic.first);
+    return topics;
+}
+
+pair<TopicMessage, vector<Connection*>> TopicHandler::popTopicMessage(const std::string &name){
     this->lockBoth();
     auto messages = this->messageQueue.find(name);
     auto listeners = this->topicListeners.find(name);
     if(messages == this->messageQueue.end() || listeners == this->topicListeners.end()){
         cout << "COULD NOT FIND TOPIC: " << name << ", REGISTER FIRST BEFORE POPING MESSAGE" << endl;
         this->unlockBoth();
-        return {{}, vector<NodeAddress>()};
+        return {{}, vector<Connection*>()};
     }
     TopicMessage message = messages->second.front();
     messages->second.pop_front();
@@ -78,7 +86,7 @@ bool TopicHandler::removeTopicListener(const std::string &name, const struct Nod
         return false;
     }
     for(unsigned int i = 0; i < listeners->second.size(); i++){
-        if(listeners->second[i].ip != listener.ip || listeners->second[i].port != listener.port) continue;
+        if(listeners->second[i]->getRemoteAddress().ip != listener.ip || listeners->second[i]->getRemoteAddress().port != listener.port) continue;
         /* TODO, CLEAR CURRENT ELEMENT */
         assert(false);
         break;
